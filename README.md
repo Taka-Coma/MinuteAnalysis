@@ -1,5 +1,6 @@
 # 国会会議録からのキーフレーズ抽出
 
+参考：https://zenn.dev/knok/articles/098b265fb2b779
 
 ## 会議録ダウンロード
 ```
