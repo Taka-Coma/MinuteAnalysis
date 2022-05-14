@@ -62,6 +62,7 @@ curl -o {minid}.json  "https://kokkai.ndl.go.jp/api/meeting?issueID={minid}&reco
 - spacy
 - ginza
 - pke (https://github.com/boudinfl/pke)
+	- doc > https://boudinfl.github.io/pke/build/html/base.html
 
 ### Install
 ```
