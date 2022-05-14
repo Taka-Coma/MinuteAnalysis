@@ -7,6 +7,9 @@ import pke
 import numpy as np
 from copy import deepcopy
 
+import pickle
+
+
 def main():
 	kp_extractor = pke.unsupervised.MultipartiteRank()
 
@@ -42,15 +45,14 @@ def main():
 		for i, speech in enumerate(out['meetingRecord'][0]['speechRecord']):
 			kps_in_speech = speech['keyphrase']
 
-			inds = [(i, kps.index(kp)) for kp in kps_in_speech]
-			np.put(kp_mat, inds, [1])
-
-		print(kp_mat)
-
-		return
+			for kp in kps_in_speech:
+				kp_mat[i, kps.index(kp)] = 1
 
 		with open(f'../keyphrases/{doc["meetingRecord"][0]["issueID"]}.json', 'w') as w:
 			json.dump(out, w)
+
+		with open(f'../keyphrases/{doc["meetingRecord"][0]["issueID"]}_mat.pkl', 'wb') as w:
+			pickle.dump(kp_mat, w)
 		
 
 if __name__ == "__main__":
