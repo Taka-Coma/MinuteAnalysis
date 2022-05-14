@@ -5,11 +5,8 @@ from glob import glob
 
 import pke
 
-from pprint import pprint
-
 def main():
 	kp_extractor = pke.unsupervised.MultipartiteRank()
-	#kp_extractor = pke.unsupervised.YAKE()
 
 	for path in glob('../minutes/*'):
 		with open(path, 'r') as r:
@@ -17,7 +14,8 @@ def main():
 
 		speakers = ['政府', '参考人'] + [speech['speaker'] for speech in doc['meetingRecord'][0]['speechRecord']]
 
-		kp = []
+		out = doc.copy()
+		out['meetingRecord'][0]['speechRecord'] = []
 		for speech in doc['meetingRecord'][0]['speechRecord']:
 			kp_extractor.load_document(
 				input=speech['speech'],
@@ -28,9 +26,12 @@ def main():
 			kp_extractor.candidate_selection()
 			kp_extractor.candidate_weighting()
 
-			kp += kp_extractor.get_n_best(n=100)
+			speech['keyphrase'] = kp_extractor.get_n_best(n=100),
+			out['meetingRecord'][0]['speechRecord'].append(speech)
 
-		pprint(kp)
+		with open(f'../keyphrases/{doc["meetingRecord"][0]["issueID"]}.json', 'w') as w:
+			json.dump(out, w)
+		
 
 if __name__ == "__main__":
     main()
