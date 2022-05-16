@@ -34,7 +34,7 @@ def main():
 			kp_extractor.candidate_selection()
 			kp_extractor.candidate_weighting()
 
-			speech['keyphrase'] = [k for k, conf in kp_extractor.get_n_best(n=100)]
+			speech['keyphrase'] = [k.replace(' ', '') for k, conf in kp_extractor.get_n_best(n=100)]
 			out['meetingRecord'][0]['speechRecord'].append(speech)
 
 			kps += speech['keyphrase']
