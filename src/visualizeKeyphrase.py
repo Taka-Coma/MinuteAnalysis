@@ -32,7 +32,28 @@ def generateHTML(issueID):
 	counts = Counter(kps)
 
 	div_speeches = []
-	for speech in meeting['speechRecord']:
+	sbjs = []
+	for i, speech in enumerate(meeting['speechRecord']):
+		### Extract subjects and skip meeting info
+		if i == 0:
+			cands = speech['speech'].split('本日の会議に付した案件')[1]
+			cands = [sbj for sbj in cands.split('\r\n') if len(sbj) > 0 and sbj.count('\u3000') < 2]
+
+			for sbj in cands:
+				### cleaning
+				sbj = sbj.strip()
+				if sbj[0] == '○':
+					sbj = sbj[1:]
+
+				if sbj.find('（') > -1:
+					sbjs.append(sbj[:sbj.find('（')])
+				elif sbj.find('）') > -1:
+					continue
+				else:
+					sbjs.append(sbj)
+				
+			continue
+
 		### Speech block with header
 		div_speech = f'''
 			<div class='row speech-block'>
@@ -48,22 +69,30 @@ def generateHTML(issueID):
 		for kp in sorted(speech['keyphrase'], key=lambda x: counts[x]):
 			pattern = re.compile(re.escape(kp), re.IGNORECASE)
 			speech_txt = pattern.sub(f'<span class="keyphrase">{kp}</span>', speech_txt)
-			kp_txt.append(f'<li>{kp} ({counts[kp]})</li>')
+			kp_txt.append(f"<button class='btn btn-sm btn-outline-dark tag-btn' onclick='searchSpeech(\"{kp}\")'>{kp}</button>")
 		div_speech += speech_txt.replace('\n', '<br>') + "</div>"
 
 		kp_txt = ''.join(kp_txt)
 
 		### Keyphrase list
-		div_speech += f'<div class="col-md-4 keyphrase-list"><ul>{kp_txt}</ul></div>'
+		div_speech += f'<div class="col-md-4 keyphrase-list">{kp_txt}</div>'
 
 		### Close speech block
 		div_speech += '</div>'
 		div_speeches.append(div_speech)
 
+	tags = ''
+	for kp in set([k for k, c in counts.most_common(40)]):
+		tags += f"<button class='btn btn-sm btn-outline-dark tag-btn' onclick='searchSpeech(\"{kp}\")'>{kp}</button>"
+
 	div_speeches = ''.join(div_speeches)
 
 	div_issue = f'''
 		<link rel="stylesheet" href="/css/minute.css">
+		<i data-feather="tag"></i>
+		<span class='tag-header'>Tags</span>
+		<br>
+		{tags}
 		<div class='issue-block'>
 			<div class='issue-body'>
 				{div_speeches}
@@ -75,6 +104,7 @@ def generateHTML(issueID):
 title: "{issue_name}"
 publishdate: {issue_date}
 draft: false
+tags: {sbjs}
 ---
 ''' + htmlmin.minify(div_issue)
 
