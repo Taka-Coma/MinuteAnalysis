@@ -28,7 +28,7 @@ def generateHTML(issueID):
 	kps = []
 	num_speech = len(meeting['speechRecord'])
 	for speech in meeting['speechRecord']:
-		kps += speech['keyphrase']
+		kps += speech['keyphrase_full']
 	counts = Counter(kps)
 
 	div_speeches = []
@@ -66,7 +66,7 @@ def generateHTML(issueID):
 		### Speech text for highlight
 		speech_txt = speech['speech']
 		kp_txt = []
-		for kp in sorted(speech['keyphrase'], key=lambda x: counts[x]):
+		for kp in sorted(speech['keyphrase_full'], key=lambda x: counts[x]):
 			pattern = re.compile(re.escape(kp), re.IGNORECASE)
 			speech_txt = pattern.sub(f'<span class="keyphrase">{kp}</span>', speech_txt)
 			kp_txt.append(f"<button class='btn btn-sm btn-outline-dark tag-btn' onclick='searchSpeech(\"{kp}\")'>{kp}</button>")

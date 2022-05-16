@@ -17,7 +17,7 @@ def main():
 		with open(path, 'r') as r:
 			doc = json.load(r)
 
-		speakers = ['政府', '参考人'] + [speech['speaker'] for speech in doc['meetingRecord'][0]['speechRecord']]
+		speakers = ['政府', '参考人', '委員長', 'ところ', 'とおり', 'お願い'] + [speech['speaker'] for speech in doc['meetingRecord'][0]['speechRecord']]
 
 		kps = []
 
@@ -35,6 +35,12 @@ def main():
 			kp_extractor.candidate_weighting()
 
 			speech['keyphrase'] = [k.replace(' ', '') for k, conf in kp_extractor.get_n_best(n=100)]
+			tmp = []
+			for k, conf in kp_extractor.get_n_best(n=100):
+				tmp.append(k.replace(' ', ''))
+				for sub_k in k.split(' '):
+					tmp.append(sub_k)
+			speech['keyphrase_full'] = list(set(tmp))
 			out['meetingRecord'][0]['speechRecord'].append(speech)
 
 			kps += speech['keyphrase']
