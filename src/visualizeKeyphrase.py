@@ -75,14 +75,18 @@ def generateHTML(issueID):
 		kp_txt = ''.join(kp_txt)
 
 		### Keyphrase list
-		div_speech += f'<div class="col-md-4 keyphrase-list">{kp_txt}</div>'
+		div_speech += f'''
+			<i data-feather="tag"></i>
+			<span class='tag-header'>Keyphrases</span>
+			<div class="col-md-4 keyphrase-list">{kp_txt}</div>
+		'''
 
 		### Close speech block
 		div_speech += '</div>'
 		div_speeches.append(div_speech)
 
 	tags = ''
-	for kp in set([k for k, c in counts.most_common(40)]):
+	for kp in set([k for k, c in counts.most_common(100)]):
 		tags += f"<button class='btn btn-sm btn-outline-dark tag-btn' onclick='searchSpeech(\"{kp}\")'>{kp}</button>"
 
 	div_speeches = ''.join(div_speeches)
@@ -90,7 +94,7 @@ def generateHTML(issueID):
 	div_issue = f'''
 		<link rel="stylesheet" href="/css/minute.css">
 		<i data-feather="tag"></i>
-		<span class='tag-header'>Tags</span>
+		<span class='tag-header'>Keyphrases</span>
 		<br>
 		{tags}
 		<div class='issue-block'>
