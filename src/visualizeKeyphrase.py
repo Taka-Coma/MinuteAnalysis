@@ -76,9 +76,12 @@ def generateHTML(issueID):
 
 		### Keyphrase list
 		div_speech += f'''
-			<i data-feather="tag"></i>
-			<span class='tag-header'>Keyphrases</span>
-			<div class="col-md-4 keyphrase-list">{kp_txt}</div>
+			<div class="col-md-4 keyphrase-list">
+				<i data-feather="tag"></i>
+				<span class='tag-header'>Keyphrases</span>
+				<br>
+				{kp_txt}
+			</div>
 		'''
 
 		### Close speech block
