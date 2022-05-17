@@ -98,6 +98,7 @@ def generateHTML(issueID):
 		<link rel="stylesheet" href="/css/minute.css">
 		<i data-feather="tag"></i>
 		<span class='tag-header'>Keyphrases</span>
+		<button class='btn btn-sm btn-outline-dark tag-btn' onclick='resetSpeechSearch()'><i data-feather="refresh-cw"></i> Reset</button>
 		<br>
 		{tags}
 		<div class='issue-block'>

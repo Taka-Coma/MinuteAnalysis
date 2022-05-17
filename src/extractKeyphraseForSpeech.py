@@ -17,7 +17,12 @@ def main():
 		with open(path, 'r') as r:
 			doc = json.load(r)
 
-		speakers = ['政府', '参考人', '委員長', 'ところ', 'とおり', 'お願い'] + [speech['speaker'] for speech in doc['meetingRecord'][0]['speechRecord']]
+		stoplist = []
+		with open('./misc/stoplist.txt', 'r') as r:
+			for line in r:
+				stoplist.append(line.strip())
+				
+		stoplist += [speech['speaker'] for speech in doc['meetingRecord'][0]['speechRecord']]
 
 		kps = []
 
@@ -29,7 +34,7 @@ def main():
 				input=speech['speech'],
 				language='ja',
 				normalization=None,
-				stoplist=speakers
+				stoplist=stoplist
 				)
 			kp_extractor.candidate_selection()
 			kp_extractor.candidate_weighting()
