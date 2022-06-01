@@ -36,7 +36,7 @@ def main():
 				normalization=None,
 				stoplist=stoplist
 				)
-			kp_extractor.candidate_selection()
+			kp_extractor.candidate_selection(pos={'NOUN', 'PROPN', 'NUM'})
 			kp_extractor.candidate_weighting()
 
 			speech['keyphrase'] = [k.replace(' ', '') for k, conf in kp_extractor.get_n_best(n=100)]
